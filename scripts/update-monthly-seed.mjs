@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
-const BINANCE_BASE = "https://api.binance.com";
+const BINANCE_BASE = "https://api.binance.me";
 const SYMBOL = "BTCUSDT";
 const TIMEZONE = "0";
 const SEED_PATH = path.resolve(process.cwd(), "data/monthly-seed.json");
