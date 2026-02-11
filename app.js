@@ -120,12 +120,18 @@ function fitToViewport() {
   if (!page) return;
   // 先重置缩放以获取真实内容尺寸
   page.style.zoom = "1";
-  const contentHeight = page.scrollHeight;
-  const viewportHeight = window.innerHeight;
-  const padding = 60; // 上下各留 30px 的空白
-  const available = viewportHeight - padding;
-  if (contentHeight > available) {
-    const scale = available / contentHeight;
+  const contentW = page.scrollWidth;
+  const contentH = page.scrollHeight;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const padH = 60; // 上下各留 30px
+  const padW = 16; // 左右各留 8px
+
+  const scaleW = (vw - padW) / contentW;
+  const scaleH = (vh - padH) / contentH;
+  const scale = Math.min(scaleW, scaleH, 1); // 不超过 1
+
+  if (scale < 1) {
     page.style.zoom = `${scale}`;
   }
 }

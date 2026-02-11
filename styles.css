@@ -29,6 +29,48 @@ body {
   overflow: hidden;
 }
 
+/* 触摸设备：禁用 hover 放大效果，允许滚动 */
+@media (hover: none) and (pointer: coarse) {
+  body {
+    overflow: auto;
+  }
+
+  .cycle-table td:hover:not(.gap-col) {
+    transform: none;
+    z-index: 1;
+    box-shadow: none;
+  }
+
+  .cross-highlight {
+    transform: none !important;
+    z-index: 1 !important;
+    box-shadow: none !important;
+  }
+
+  .group-highlight {
+    box-shadow: none;
+    filter: none;
+  }
+
+  .cycle-table td:not(:hover),
+  .cycle-table th:not(.cross-highlight) {
+    animation: none;
+  }
+}
+
+/* 窄屏：标题和价格上下排列 */
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .price-box {
+    justify-content: center;
+  }
+}
+
 .page {
   width: fit-content;
   margin: 36px auto 18px;
