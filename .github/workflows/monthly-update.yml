@@ -1,0 +1,55 @@
+name: Monthly Seed Update
+
+on:
+  schedule:
+    - cron: "10 0 1 * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "monthly or sync-all"
+        required: false
+        default: "monthly"
+      target:
+        description: "Optional target month (YYYY-MM) for monthly mode"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  update-seed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Update monthly seed
+        run: |
+          MODE="${{ github.event.inputs.mode }}"
+          TARGET="${{ github.event.inputs.target }}"
+          if [ -z "$MODE" ]; then MODE="monthly"; fi
+          if [ "$MODE" = "sync-all" ]; then
+            node scripts/update-monthly-seed.mjs --sync-all
+          elif [ -n "$TARGET" ]; then
+            node scripts/update-monthly-seed.mjs --target="$TARGET"
+          else
+            node scripts/update-monthly-seed.mjs
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- data/monthly-seed.json; then
+            echo "No seed changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/monthly-seed.json
+          git commit -m "chore(data): update monthly seed"
+          git push
