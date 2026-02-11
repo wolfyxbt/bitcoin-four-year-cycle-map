@@ -2,17 +2,14 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
-const BINANCE_BASE = "https://api.binance.me";
 const SYMBOL = "BTCUSDT";
-const TIMEZONE = "0";
 const SEED_PATH = path.resolve(process.cwd(), "data/monthly-seed.json");
+
+/* ── helpers ───────────────────────────────────────── */
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const opt = {
-    mode: "monthly",
-    targetMonth: null,
-  };
+  const opt = { mode: "monthly", targetMonth: null };
   for (const arg of args) {
     if (arg === "--sync-all") opt.mode = "sync-all";
     if (arg.startsWith("--target=")) opt.targetMonth = arg.slice("--target=".length);
@@ -25,21 +22,11 @@ function monthKeyFromUtcTs(tsMs) {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
-function monthStartUtcMs(monthKey) {
-  const [year, month] = monthKey.split("-").map(Number);
-  return Date.UTC(year, month - 1, 1, 0, 0, 0, 0);
-}
-
-function nextMonthStartUtcMs(monthKey) {
-  const [year, month] = monthKey.split("-").map(Number);
-  return Date.UTC(year, month, 1, 0, 0, 0, 0);
-}
-
 function previousMonthKey() {
   const now = new Date();
-  const year = now.getUTCFullYear();
-  const month = now.getUTCMonth();
-  const d = month === 0 ? new Date(Date.UTC(year - 1, 11, 1)) : new Date(Date.UTC(year, month - 1, 1));
+  const y = now.getUTCFullYear();
+  const m = now.getUTCMonth(); // 0-based
+  const d = m === 0 ? new Date(Date.UTC(y - 1, 11, 1)) : new Date(Date.UTC(y, m - 1, 1));
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
@@ -52,57 +39,29 @@ async function fetchJson(url) {
   return res.json();
 }
 
-async function fetchBinanceMonth(monthKey) {
-  const startTime = monthStartUtcMs(monthKey);
-  const endTime = nextMonthStartUtcMs(monthKey) - 1;
-  const url =
-    `${BINANCE_BASE}/api/v3/klines` +
-    `?symbol=${SYMBOL}&interval=1M&timeZone=${TIMEZONE}&startTime=${startTime}&endTime=${endTime}&limit=2`;
-  const rows = await fetchJson(url);
-  const hit = rows.find((r) => monthKeyFromUtcTs(Number(r[0])) === monthKey);
-  if (!hit) throw new Error(`Binance 未返回目标月份数据: ${monthKey}`);
-  return {
-    monthKey,
-    open: Number(hit[1]),
-    close: Number(hit[4]),
-    source: "binance",
-    isClosed: true,
-  };
-}
-
-async function fetchBinanceAll() {
-  const startTime = Date.UTC(2017, 7, 1);
-  const endTime = Date.now();
-  const url =
-    `${BINANCE_BASE}/api/v3/klines` +
-    `?symbol=${SYMBOL}&interval=1M&timeZone=${TIMEZONE}&startTime=${startTime}&endTime=${endTime}&limit=1000`;
-  const rows = await fetchJson(url);
-  return rows.map((r) => ({
-    monthKey: monthKeyFromUtcTs(Number(r[0])),
-    open: Number(r[1]),
-    close: Number(r[4]),
-    source: "binance",
-    isClosed: true,
-  }));
-}
+/* ── blockchain.info data source ───────────────────── */
 
 async function fetchBlockchainMonthly() {
   const url = "https://api.blockchain.info/charts/market-price?timespan=all&format=json&cors=true";
+  console.log("Fetching from blockchain.info …");
   const data = await fetchJson(url);
   const monthly = new Map();
   for (const v of data.values || []) {
     const tsMs = Number(v.x) * 1000;
     const price = Number(v.y);
     if (!Number.isFinite(tsMs) || !Number.isFinite(price) || price <= 0) continue;
-    const monthKey = monthKeyFromUtcTs(tsMs);
-    if (!monthly.has(monthKey)) {
-      monthly.set(monthKey, { monthKey, open: price, close: price, source: "blockchain-info", isClosed: true });
+    const mk = monthKeyFromUtcTs(tsMs);
+    if (!monthly.has(mk)) {
+      monthly.set(mk, { monthKey: mk, open: price, close: price, source: "blockchain-info", isClosed: true });
     } else {
-      monthly.get(monthKey).close = price;
+      monthly.get(mk).close = price;
     }
   }
-  return [...monthly.values()].sort((a, b) => a.monthKey.localeCompare(b.monthKey));
+  console.log(`  ✓ blockchain.info returned ${monthly.size} months`);
+  return monthly;
 }
+
+/* ── seed read / write ─────────────────────────────── */
 
 async function readSeed() {
   try {
@@ -139,30 +98,40 @@ function upsertRow(rows, row) {
   else rows.push(row);
 }
 
+/* ── run modes ─────────────────────────────────────── */
+
 async function runMonthly(targetMonth) {
   const seed = await readSeed();
   const month = targetMonth || previousMonthKey();
-  const row = await fetchBinanceMonth(month);
+  console.log(`Updating month: ${month}`);
+
+  const allMonths = await fetchBlockchainMonthly();
+  const row = allMonths.get(month);
+  if (!row) throw new Error(`blockchain.info 未返回 ${month} 的数据`);
+
   upsertRow(seed.rows, row);
   await writeSeed(seed);
-  console.log(`updated month ${month}`);
+  console.log(`✓ Updated ${month} (open: ${row.open}, close: ${row.close})`);
 }
 
 async function runSyncAll() {
   const seed = await readSeed();
-  const [blockchainRows, binanceRows] = await Promise.all([fetchBlockchainMonthly(), fetchBinanceAll()]);
-  const merged = new Map();
-  for (const row of blockchainRows) merged.set(row.monthKey, row);
-  for (const row of binanceRows) merged.set(row.monthKey, row);
-
+  const allMonths = await fetchBlockchainMonthly();
   const nowMonth = monthKeyFromUtcTs(Date.now());
-  seed.rows = [...merged.values()]
-    .filter((r) => r.monthKey < nowMonth)
-    .sort((a, b) => a.monthKey.localeCompare(b.monthKey));
 
+  // Keep existing rows as base, overlay with blockchain.info data
+  const merged = new Map();
+  for (const row of seed.rows) merged.set(row.monthKey, row);
+  for (const [mk, row] of allMonths) {
+    if (mk < nowMonth) merged.set(mk, row);
+  }
+
+  seed.rows = [...merged.values()].sort((a, b) => a.monthKey.localeCompare(b.monthKey));
   await writeSeed(seed);
-  console.log(`sync-all done: ${seed.rows.length} rows`);
+  console.log(`✓ sync-all done: ${seed.rows.length} rows`);
 }
+
+/* ── main ──────────────────────────────────────────── */
 
 async function main() {
   const opt = parseArgs();
