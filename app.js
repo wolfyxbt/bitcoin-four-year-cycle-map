@@ -249,6 +249,8 @@ function updateStaticTexts() {
   if (pageTitleEl) pageTitleEl.textContent = t("pageTitle");
   const priceLabelEl = document.getElementById("price-label");
   if (priceLabelEl) priceLabelEl.textContent = t("priceLabel");
+  const monthLabelEl = document.getElementById("month-label");
+  if (monthLabelEl) monthLabelEl.textContent = t("monthChangeLabel");
   const langText = document.querySelector("#lang-btn .lang-text");
   if (langText) langText.textContent = t("langBtn");
 }

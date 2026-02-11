@@ -1,8 +1,8 @@
 const translations = {
   zh: {
-    pageTitle: "比特币四年周期轮回图",
+    pageTitle: "比特币四年周期轮动图",
     mainTitle: "比特币",
-    mainTitleSuffix: "四年周期轮回图",
+    mainTitleSuffix: "四年周期轮动图",
     priceLabel: "比特币现价",
     yearHeader: "年份",
     monthLabels: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],

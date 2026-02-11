@@ -98,6 +98,15 @@ function upsertRow(rows, row) {
   else rows.push(row);
 }
 
+/* ── retry helper ──────────────────────────────────── */
+
+const MAX_RETRIES = 5;
+const RETRY_INTERVAL_MS = 60 * 60 * 1000; // 1 小时
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /* ── run modes ─────────────────────────────────────── */
 
 async function runMonthly(targetMonth) {
@@ -105,13 +114,26 @@ async function runMonthly(targetMonth) {
   const month = targetMonth || previousMonthKey();
   console.log(`Updating month: ${month}`);
 
-  const allMonths = await fetchBlockchainMonthly();
-  const row = allMonths.get(month);
-  if (!row) throw new Error(`blockchain.info 未返回 ${month} 的数据`);
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const allMonths = await fetchBlockchainMonthly();
+      const row = allMonths.get(month);
+      if (!row) throw new Error(`blockchain.info 未返回 ${month} 的数据`);
 
-  upsertRow(seed.rows, row);
-  await writeSeed(seed);
-  console.log(`✓ Updated ${month} (open: ${row.open}, close: ${row.close})`);
+      upsertRow(seed.rows, row);
+      await writeSeed(seed);
+      console.log(`✓ Updated ${month} (open: ${row.open}, close: ${row.close})`);
+      return;
+    } catch (err) {
+      console.warn(`✗ 第 ${attempt}/${MAX_RETRIES} 次尝试失败: ${err.message}`);
+      if (attempt < MAX_RETRIES) {
+        console.log(`  等待 1 小时后重试…`);
+        await sleep(RETRY_INTERVAL_MS);
+      } else {
+        throw new Error(`连续 ${MAX_RETRIES} 次尝试均失败，放弃更新 ${month}`);
+      }
+    }
+  }
 }
 
 async function runSyncAll() {

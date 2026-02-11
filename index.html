@@ -3,17 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="page-title">比特币四年周期轮回图</title>
+    <title id="page-title">比特币四年周期轮动图</title>
+    <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="./favicon/site.webmanifest" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main class="page">
       <header class="topbar">
-        <h1 id="main-title">比特币 <span class="muted">四年周期轮回图</span></h1>
+        <h1 id="main-title">比特币 <span class="muted">四年周期轮动图</span></h1>
         <div class="price-box">
-          <span class="label" id="price-label">比特币现价</span>
-          <span id="spot-price" class="price-value">00,000</span>
-          <span id="month-change" class="month-change"><span class="month-change-label">本月</span>0.00%</span>
+          <div class="price-group">
+            <span class="group-label" id="price-label">比特币现价</span>
+            <span id="spot-price" class="price-value">00,000</span>
+          </div>
+          <div class="price-group">
+            <span class="group-label" id="month-label">本月</span>
+            <span id="month-change" class="month-change">0.00%</span>
+          </div>
         </div>
       </header>
 

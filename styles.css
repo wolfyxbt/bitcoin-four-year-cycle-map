@@ -29,48 +29,6 @@ body {
   overflow: hidden;
 }
 
-/* 触摸设备：禁用 hover 放大效果，允许滚动 */
-@media (hover: none) and (pointer: coarse) {
-  body {
-    overflow: auto;
-  }
-
-  .cycle-table td:hover:not(.gap-col) {
-    transform: none;
-    z-index: 1;
-    box-shadow: none;
-  }
-
-  .cross-highlight {
-    transform: none !important;
-    z-index: 1 !important;
-    box-shadow: none !important;
-  }
-
-  .group-highlight {
-    box-shadow: none;
-    filter: none;
-  }
-
-  .cycle-table td:not(:hover),
-  .cycle-table th:not(.cross-highlight) {
-    animation: none;
-  }
-}
-
-/* 窄屏：标题和价格上下排列 */
-@media (max-width: 768px) {
-  .topbar {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .price-box {
-    justify-content: center;
-  }
-}
-
 .page {
   width: fit-content;
   margin: 36px auto 18px;
@@ -90,6 +48,7 @@ h1 {
   font-size: 46px;
   line-height: 1;
   color: #d90000;
+  white-space: nowrap;
 }
 
 .lang-en h1 {
@@ -110,14 +69,22 @@ h1 {
   pointer-events: none;
 }
 
+.lang-cell .btn-group {
+  width: 100%;
+  justify-content: center;
+  padding-left: 20px; /* 补偿 gap 列宽度，使按钮在 Total+Cycle 范围内居中 */
+}
+
 .lang-cell .lang-btn,
-.lang-cell .x-btn {
+.lang-cell .x-btn,
+.lang-cell .gh-btn {
   pointer-events: auto;
 }
 
 .btn-group {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -139,6 +106,10 @@ h1 {
   line-height: 1;
 }
 
+.lang-text {
+  white-space: nowrap;
+}
+
 .lang-btn:hover {
   background: #000000;
   color: #FCFCF7;
@@ -154,10 +125,6 @@ h1 {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
-}
-
-.lang-text {
-  white-space: nowrap;
 }
 
 .x-btn {
@@ -190,6 +157,39 @@ h1 {
 .x-icon {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
+}
+
+.gh-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #000000;
+  background: #FCFCF7;
+  color: #000000;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.15s;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.gh-btn:hover {
+  background: #000000;
+  color: #FCFCF7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
+}
+
+.gh-btn:active {
+  transform: translateY(0);
+}
+
+.gh-icon {
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
 }
 
@@ -359,15 +359,23 @@ h1 {
 .price-box {
   padding: 0;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-end;
+  gap: 20px;
 }
 
-#price-label {
-  font-size: 16px;
+.price-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.group-label {
+  font-size: 14px;
   font-weight: 700;
-  color: var(--text);
+  color: var(--muted);
   line-height: 1;
+  white-space: nowrap;
 }
 
 .price-value {
@@ -384,12 +392,6 @@ h1 {
   line-height: 1;
   display: flex;
   align-items: center;
-}
-
-.month-change-label {
-  font-size: 16px;
-  font-weight: 700;
-  margin-right: 6px;
 }
 
 .month-change.up {
@@ -443,4 +445,19 @@ h1 {
   background: var(--cycle-smallbull);
 }
 
+/* 手机端调整 */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 38px;
+  }
+
+  .lang-en h1 {
+    font-size: 34px;
+  }
+
+  .price-value,
+  .month-change {
+    font-size: 38px;
+  }
+}
 
