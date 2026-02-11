@@ -2,7 +2,7 @@
   "version": 1,
   "timezone": "UTC",
   "symbol": "BTCUSDT",
-  "updatedAt": "2026-02-11T21:24:55.932Z",
+  "updatedAt": "2026-02-11T21:28:13.498Z",
   "rows": [
     {
       "monthKey": "2010-08",
@@ -594,709 +594,709 @@
     },
     {
       "monthKey": "2017-08",
-      "open": 4261.48,
-      "close": 4724.89,
-      "source": "binance",
+      "open": 2862.9,
+      "close": 4376.66,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2017-09",
-      "open": 4689.89,
-      "close": 4378.51,
-      "source": "binance",
+      "open": 4908.41,
+      "close": 4164.27,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2017-10",
-      "open": 4378.49,
-      "close": 6463,
-      "source": "binance",
+      "open": 4308.33,
+      "close": 5769.89,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2017-11",
-      "open": 6463,
-      "close": 9838.96,
-      "source": "binance",
+      "open": 6416.07,
+      "close": 9919,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2017-12",
-      "open": 9837,
-      "close": 13716.36,
-      "source": "binance",
+      "open": 10912.87,
+      "close": 12612.54,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-01",
-      "open": 13715.65,
-      "close": 10285.1,
-      "source": "binance",
+      "open": 15039.24,
+      "close": 11431.37,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-02",
-      "open": 10285.1,
-      "close": 10326.76,
-      "source": "binance",
+      "open": 10204,
+      "close": 9699.76,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-03",
-      "open": 10325.64,
-      "close": 6923.91,
-      "source": "binance",
+      "open": 10332.14,
+      "close": 7950.61,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-04",
-      "open": 6922,
-      "close": 9246.01,
-      "source": "binance",
+      "open": 6827.54,
+      "close": 9398.4,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-05",
-      "open": 9246.01,
-      "close": 7485.01,
-      "source": "binance",
+      "open": 9753.35,
+      "close": 7344.56,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-06",
-      "open": 7485.01,
-      "close": 6390.07,
-      "source": "binance",
+      "open": 7489.66,
+      "close": 5878.14,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-07",
-      "open": 6391.08,
-      "close": 7730.93,
-      "source": "binance",
+      "open": 6626.44,
+      "close": 8171.49,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-08",
-      "open": 7735.67,
-      "close": 7011.21,
-      "source": "binance",
+      "open": 7414.77,
+      "close": 6901.26,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-09",
-      "open": 7011.21,
-      "close": 6626.57,
-      "source": "binance",
+      "open": 7018.78,
+      "close": 6628.66,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-10",
-      "open": 6626.57,
-      "close": 6371.93,
-      "source": "binance",
+      "open": 6521.31,
+      "close": 6301.61,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-11",
-      "open": 6369.52,
-      "close": 4041.32,
-      "source": "binance",
+      "open": 6361.3,
+      "close": 3828.45,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2018-12",
-      "open": 4041.27,
-      "close": 3702.9,
-      "source": "binance",
+      "open": 4188.09,
+      "close": 3770.36,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-01",
-      "open": 3701.23,
-      "close": 3434.1,
-      "source": "binance",
+      "open": 3931.31,
+      "close": 3470,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-02",
-      "open": 3434.1,
-      "close": 3813.69,
-      "source": "binance",
+      "open": 3456.02,
+      "close": 3833.23,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-03",
-      "open": 3814.26,
-      "close": 4103.95,
-      "source": "binance",
+      "open": 3814.58,
+      "close": 4048.51,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-04",
-      "open": 4102.44,
-      "close": 5320.81,
-      "source": "binance",
+      "open": 4114.16,
+      "close": 5301.29,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-05",
-      "open": 5321.94,
-      "close": 8555,
-      "source": "binance",
+      "open": 5390.16,
+      "close": 8272.46,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-06",
-      "open": 8555,
-      "close": 10854.1,
-      "source": "binance",
+      "open": 8134.92,
+      "close": 11132.85,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-07",
-      "open": 10854.1,
-      "close": 10080.53,
-      "source": "binance",
+      "open": 10578.72,
+      "close": 9501.33,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-08",
-      "open": 10080.53,
-      "close": 9587.47,
-      "source": "binance",
+      "open": 10529.55,
+      "close": 9577.99,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-09",
-      "open": 9588.74,
-      "close": 8289.34,
-      "source": "binance",
+      "open": 10621.29,
+      "close": 8193.9,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-10",
-      "open": 8289.97,
-      "close": 9140.85,
-      "source": "binance",
+      "open": 8322.92,
+      "close": 9433.35,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-11",
-      "open": 9140.86,
-      "close": 7541.89,
-      "source": "binance",
+      "open": 9301.18,
+      "close": 7163.63,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2019-12",
-      "open": 7540.63,
-      "close": 7195.23,
-      "source": "binance",
+      "open": 7557.72,
+      "close": 7301.07,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-01",
-      "open": 7195.24,
-      "close": 9352.89,
-      "source": "binance",
+      "open": 7175.68,
+      "close": 9279.81,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-02",
-      "open": 9351.71,
-      "close": 8523.61,
-      "source": "binance",
+      "open": 9314.56,
+      "close": 8785.52,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-03",
-      "open": 8523.61,
-      "close": 6410.44,
-      "source": "binance",
+      "open": 8534.17,
+      "close": 5885.41,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-04",
-      "open": 6412.14,
-      "close": 8620,
-      "source": "binance",
+      "open": 6809.11,
+      "close": 7699.27,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-05",
-      "open": 8620,
-      "close": 9448.27,
-      "source": "binance",
+      "open": 8628.77,
+      "close": 9569.21,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-06",
-      "open": 9448.27,
-      "close": 9138.55,
-      "source": "binance",
+      "open": 10204.23,
+      "close": 9185.35,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-07",
-      "open": 9138.08,
-      "close": 11335.46,
-      "source": "binance",
+      "open": 9072.42,
+      "close": 11042.4,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-08",
-      "open": 11335.46,
-      "close": 11649.51,
-      "source": "binance",
+      "open": 11343.88,
+      "close": 11534.75,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-09",
-      "open": 11649.51,
-      "close": 10776.59,
-      "source": "binance",
+      "open": 11923.25,
+      "close": 10840.8,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-10",
-      "open": 10776.59,
-      "close": 13791,
-      "source": "binance",
+      "open": 10551.77,
+      "close": 13651.47,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-11",
-      "open": 13791,
-      "close": 19695.87,
-      "source": "binance",
+      "open": 13810.32,
+      "close": 17732.42,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2020-12",
-      "open": 19695.87,
-      "close": 28923.63,
-      "source": "binance",
+      "open": 19226.97,
+      "close": 28856.59,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-01",
-      "open": 28923.63,
-      "close": 33092.98,
-      "source": "binance",
+      "open": 33000.78,
+      "close": 30419.17,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-02",
-      "open": 33092.97,
-      "close": 45135.66,
-      "source": "binance",
+      "open": 33136.46,
+      "close": 50624.84,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-03",
-      "open": 45134.11,
-      "close": 58740.55,
-      "source": "binance",
+      "open": 45113.92,
+      "close": 55783.71,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-04",
-      "open": 58739.46,
-      "close": 57694.27,
-      "source": "binance",
+      "open": 58736.92,
+      "close": 53584.15,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-05",
-      "open": 57697.25,
-      "close": 37253.81,
-      "source": "binance",
+      "open": 57213.33,
+      "close": 38445.29,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-06",
-      "open": 37253.82,
-      "close": 35045,
-      "source": "binance",
+      "open": 37310.54,
+      "close": 34456.67,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-07",
-      "open": 35045,
-      "close": 41461.83,
-      "source": "binance",
+      "open": 33856.86,
+      "close": 42214.15,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-08",
-      "open": 41461.84,
-      "close": 47100.89,
-      "source": "binance",
+      "open": 38138,
+      "close": 49056.86,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-09",
-      "open": 47100.89,
-      "close": 43824.1,
-      "source": "binance",
+      "open": 47155.87,
+      "close": 41011.16,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-10",
-      "open": 43820.01,
-      "close": 61299.8,
-      "source": "binance",
+      "open": 47727.1,
+      "close": 61731.29,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-11",
-      "open": 61299.81,
-      "close": 56950.56,
-      "source": "binance",
+      "open": 62954.86,
+      "close": 54801.15,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2021-12",
-      "open": 56950.56,
-      "close": 46216.93,
-      "source": "binance",
+      "open": 57229.76,
+      "close": 46408.87,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-01",
-      "open": 46216.93,
-      "close": 38466.9,
-      "source": "binance",
+      "open": 47327.87,
+      "close": 37918.62,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-02",
-      "open": 38466.9,
-      "close": 43160,
-      "source": "binance",
+      "open": 37092.4,
+      "close": 37704.56,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-03",
-      "open": 43160,
-      "close": 45510.34,
-      "source": "binance",
+      "open": 42464.4,
+      "close": 46858.53,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-04",
-      "open": 45510.35,
-      "close": 37630.8,
-      "source": "binance",
+      "open": 45539.22,
+      "close": 39770.04,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-05",
-      "open": 37630.8,
-      "close": 31801.04,
-      "source": "binance",
+      "open": 38510.65,
+      "close": 31715.58,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-06",
-      "open": 31801.05,
-      "close": 19942.21,
-      "source": "binance",
+      "open": 29681.76,
+      "close": 20702.23,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-07",
-      "open": 19942.21,
-      "close": 23293.32,
-      "source": "binance",
+      "open": 19226.7,
+      "close": 23792,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-08",
-      "open": 23296.36,
-      "close": 20050.02,
-      "source": "binance",
+      "open": 22981.77,
+      "close": 19793.02,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-09",
-      "open": 20048.44,
-      "close": 19422.61,
-      "source": "binance",
+      "open": 19834.94,
+      "close": 19104.89,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-10",
-      "open": 19422.61,
-      "close": 20490.74,
-      "source": "binance",
+      "open": 19314.69,
+      "close": 20816.16,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-11",
-      "open": 20490.74,
-      "close": 17163.64,
-      "source": "binance",
+      "open": 20153.99,
+      "close": 16453.47,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2022-12",
-      "open": 17165.53,
-      "close": 16542.4,
-      "source": "binance",
+      "open": 17170.62,
+      "close": 16539.28,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-01",
-      "open": 16541.77,
-      "close": 23125.13,
-      "source": "binance",
+      "open": 16613.71,
+      "close": 23755.85,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-02",
-      "open": 23125.13,
-      "close": 23141.57,
-      "source": "binance",
+      "open": 23454.41,
+      "close": 23563.11,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-03",
-      "open": 23141.57,
-      "close": 28465.36,
-      "source": "binance",
+      "open": 23467.36,
+      "close": 28033.06,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-04",
-      "open": 28465.36,
-      "close": 29233.21,
-      "source": "binance",
+      "open": 27802.23,
+      "close": 29480.35,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-05",
-      "open": 29233.2,
-      "close": 27210.35,
-      "source": "binance",
+      "open": 28086.65,
+      "close": 27744.66,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-06",
-      "open": 27210.36,
-      "close": 30472,
-      "source": "binance",
+      "open": 27251.93,
+      "close": 30266.7,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-07",
-      "open": 30471.99,
-      "close": 29232.25,
-      "source": "binance",
+      "open": 30471.5,
+      "close": 29316.12,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-08",
-      "open": 29232.26,
-      "close": 25940.78,
-      "source": "binance",
+      "open": 29683.61,
+      "close": 27731.23,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-09",
-      "open": 25940.77,
-      "close": 26962.56,
-      "source": "binance",
+      "open": 25869.09,
+      "close": 26212.82,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-10",
-      "open": 26962.57,
-      "close": 34639.77,
-      "source": "binance",
+      "open": 26970.43,
+      "close": 34090.68,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-11",
-      "open": 34639.78,
-      "close": 37723.96,
-      "source": "binance",
+      "open": 35440.51,
+      "close": 37867.37,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2023-12",
-      "open": 37723.97,
-      "close": 42283.58,
-      "source": "binance",
+      "open": 39976.04,
+      "close": 43470.76,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-01",
-      "open": 42283.58,
-      "close": 42580,
-      "source": "binance",
+      "open": 42249.69,
+      "close": 42030.81,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-02",
-      "open": 42580,
-      "close": 61130.98,
-      "source": "binance",
+      "open": 43061.16,
+      "close": 51727.76,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-03",
-      "open": 61130.99,
-      "close": 71280.01,
-      "source": "binance",
+      "open": 61172.49,
+      "close": 70754.69,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-04",
-      "open": 71280,
-      "close": 60672,
-      "source": "binance",
+      "open": 69701.3,
+      "close": 63832.72,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-05",
-      "open": 60672.01,
-      "close": 67540.01,
-      "source": "binance",
+      "open": 62885.27,
+      "close": 69374.17,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-06",
-      "open": 67540.01,
-      "close": 62772.01,
-      "source": "binance",
+      "open": 67484.93,
+      "close": 60315.67,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-07",
-      "open": 62772.01,
-      "close": 64628,
-      "source": "binance",
+      "open": 62028.38,
+      "close": 66180,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-08",
-      "open": 64628.01,
-      "close": 58973.99,
-      "source": "binance",
+      "open": 60676.68,
+      "close": 59466.82,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-09",
-      "open": 58974,
-      "close": 63327.59,
-      "source": "binance",
+      "open": 58968.91,
+      "close": 65888.5,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-10",
-      "open": 63327.6,
-      "close": 70292.01,
-      "source": "binance",
+      "open": 60639.47,
+      "close": 72329.87,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-11",
-      "open": 70292.01,
-      "close": 96407.99,
-      "source": "binance",
+      "open": 68744.21,
+      "close": 95956.99,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2024-12",
-      "open": 96407.99,
-      "close": 93576,
-      "source": "binance",
+      "open": 97273.62,
+      "close": 93536.42,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-01",
-      "open": 93576,
-      "close": 102429.56,
-      "source": "binance",
+      "open": 96853.63,
+      "close": 104743.97,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-02",
-      "open": 102429.56,
-      "close": 84349.94,
-      "source": "binance",
+      "open": 101414.76,
+      "close": 84645.86,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-03",
-      "open": 84349.95,
-      "close": 82550.01,
-      "source": "binance",
+      "open": 86081.79,
+      "close": 87187.77,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-04",
-      "open": 82550,
-      "close": 94172,
-      "source": "binance",
+      "open": 82531.15,
+      "close": 94998.2,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-05",
-      "open": 94172,
-      "close": 104591.88,
-      "source": "binance",
+      "open": 96927.01,
+      "close": 104027.67,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-06",
-      "open": 104591.88,
-      "close": 107146.5,
-      "source": "binance",
+      "open": 105434.47,
+      "close": 107110.33,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-07",
-      "open": 107146.51,
-      "close": 115764.08,
-      "source": "binance",
+      "open": 105705.84,
+      "close": 117925.55,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-08",
-      "open": 115764.07,
-      "close": 108246.35,
-      "source": "binance",
+      "open": 112521.7,
+      "close": 108790.79,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-09",
-      "open": 108246.36,
-      "close": 114048.93,
-      "source": "binance",
+      "open": 111737.55,
+      "close": 109688.85,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-10",
-      "open": 114048.94,
-      "close": 109608.01,
-      "source": "binance",
+      "open": 118617.71,
+      "close": 110068.52,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-11",
-      "open": 109608.01,
-      "close": 90360,
-      "source": "binance",
+      "open": 110601.99,
+      "close": 90517.55,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
       "monthKey": "2025-12",
-      "open": 90360.01,
-      "close": 87648.22,
-      "source": "binance",
+      "open": 90376.43,
+      "close": 87835.12,
+      "source": "blockchain-info",
       "isClosed": true
     },
     {
