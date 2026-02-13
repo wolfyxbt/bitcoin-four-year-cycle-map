@@ -136,6 +136,68 @@ function fitToViewport() {
   }
 }
 
+// tooltip 元素
+let tooltipEl = null;
+function getTooltip() {
+  if (!tooltipEl) {
+    tooltipEl = document.createElement("div");
+    tooltipEl.className = "cell-tooltip";
+    document.body.appendChild(tooltipEl);
+  }
+  return tooltipEl;
+}
+
+function showTooltip(td, e) {
+  const open = td.dataset.open;
+  const close = td.dataset.close;
+  const pct = td.dataset.pct;
+  const monthKey = td.dataset.month;
+  if (!open || !close || !pct || !monthKey) {
+    hideTooltip();
+    return;
+  }
+
+  const tip = getTooltip();
+  const fmtPrice = (v) => new Intl.NumberFormat("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(Number(v));
+  const pctNum = Number(pct);
+  const sign = pctNum >= 0 ? "+" : "";
+  const pctClass = pctNum >= 0 ? "tip-up" : "tip-down";
+
+  tip.innerHTML = `
+    <div class="tip-row"><span class="tip-label">${t("tooltipOpen")}</span><span class="tip-value">${fmtPrice(open)}</span></div>
+    <div class="tip-row"><span class="tip-label">${t("tooltipClose")}</span><span class="tip-value">${fmtPrice(close)}</span></div>
+    <div class="tip-row"><span class="tip-label">${t("tooltipChange")}</span><span class="tip-value ${pctClass}">${sign}${pct}%</span></div>
+  `;
+  tip.style.display = "block";
+  positionTooltip(td);
+}
+
+function positionTooltip(td) {
+  const tip = getTooltip();
+  const rect = td.getBoundingClientRect();
+  const tipW = tip.offsetWidth;
+  const tipH = tip.offsetHeight;
+
+  // 默认显示在单元格右侧，垂直居中
+  let left = rect.right + 10;
+  let top = rect.top + rect.height / 2 - tipH / 2;
+
+  // 如果右侧空间不够，显示在左侧
+  if (left + tipW > window.innerWidth - 4) {
+    left = rect.left - tipW - 10;
+  }
+  // 上下边界保护
+  if (top < 4) top = 4;
+  if (top + tipH > window.innerHeight - 4) top = window.innerHeight - tipH - 4;
+
+  tip.style.left = `${left}px`;
+  tip.style.top = `${top}px`;
+}
+
+function hideTooltip() {
+  if (tooltipEl) tooltipEl.style.display = "none";
+}
+
 // 交叉高亮：hover 数据单元格时，同时放大对应的年份和月份表头
 let crossHighlightBound = false;
 function setupCrossHighlight() {
@@ -227,9 +289,15 @@ function setupCrossHighlight() {
       monthTh.classList.add("cross-highlight");
       highlighted.push(monthTh);
     }
+
+    // 显示 tooltip
+    showTooltip(td, e);
   });
 
-  table.addEventListener("mouseleave", clearHighlight);
+  table.addEventListener("mouseleave", () => {
+    clearHighlight();
+    hideTooltip();
+  });
 
   function clearHighlight() {
     for (const el of highlighted) {
@@ -238,6 +306,7 @@ function setupCrossHighlight() {
     }
     highlighted = [];
     currentTd = null;
+    hideTooltip();
   }
 }
 

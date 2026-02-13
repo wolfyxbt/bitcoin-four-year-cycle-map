@@ -15,6 +15,9 @@ const translations = {
     correction: "回调年",
     smallBull: "小牛年",
     monthChangeLabel: "本月",
+    tooltipOpen: "开盘价",
+    tooltipClose: "收盘价",
+    tooltipChange: "涨跌幅",
     langBtn: "EN",
   },
   en: {
@@ -33,6 +36,9 @@ const translations = {
     correction: "Correction Year",
     smallBull: "Small Bull Year",
     monthChangeLabel: "MTD",
+    tooltipOpen: "Open",
+    tooltipClose: "Close",
+    tooltipChange: "Change",
     langBtn: "中",
   },
 };

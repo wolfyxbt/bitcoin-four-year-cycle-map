@@ -73,7 +73,10 @@ export function renderMainTable({ yearRows, bottomStats, nowMonthKey }) {
         ${row.months
           .map((m, mi) => {
             const key = `${row.year}-${String(mi + 1).padStart(2, "0")}`;
-            return `<td class="${monthClass(m, nowMonthKey, key)}">${m ? formatPct(m.pct) : ""}</td>`;
+            const dataAttrs = m && Number.isFinite(m.pct)
+              ? ` data-open="${m.open}" data-close="${m.close}" data-pct="${m.pct.toFixed(2)}" data-month="${key}"`
+              : "";
+            return `<td class="${monthClass(m, nowMonthKey, key)}"${dataAttrs}>${m ? formatPct(m.pct) : ""}</td>`;
           })
           .join("")}
         <td class="gap-col"></td>
@@ -145,6 +148,13 @@ export function updateTableCells({ yearRows, bottomStats, nowMonthKey }) {
       const newText = cell ? formatPct(cell.pct) : "";
       if (td.textContent !== newText) td.textContent = newText;
       replaceDataClass(td, newClass);
+      // 同步 data 属性供 tooltip 使用
+      if (cell && Number.isFinite(cell.pct)) {
+        td.dataset.open = cell.open;
+        td.dataset.close = cell.close;
+        td.dataset.pct = cell.pct.toFixed(2);
+        td.dataset.month = key;
+      }
     }
 
     // Total 单元格（索引 14，gap 在 13）
