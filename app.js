@@ -122,13 +122,13 @@ function fitToViewport() {
   page.style.zoom = "1";
   const contentW = page.scrollWidth;
   const contentH = page.scrollHeight;
-  const vw = window.innerWidth;
+  // 使用 clientWidth 更准确，避免 iOS Safari 的 innerWidth 偏差
+  const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
-  const padH = 60; // 上下各留 30px
-  const padW = 16; // 左右各留 8px
 
-  const scaleW = (vw - padW) / contentW;
-  const scaleH = (vh - padH) / contentH;
+  // 宽度方向保留约 4% 留白（两侧各 ~2%），高度方向留 20px
+  const scaleW = (vw / contentW) * 0.96;
+  const scaleH = (vh - 20) / contentH;
   const scale = Math.min(scaleW, scaleH, 1); // 不超过 1
 
   if (scale < 1) {
@@ -142,7 +142,9 @@ function getTooltip() {
   if (!tooltipEl) {
     tooltipEl = document.createElement("div");
     tooltipEl.className = "cell-tooltip";
-    document.body.appendChild(tooltipEl);
+    // 放在 .page 内部，跟表格处于同一个 zoom 上下文
+    const page = document.querySelector(".page");
+    (page || document.body).appendChild(tooltipEl);
   }
   return tooltipEl;
 }
@@ -174,21 +176,31 @@ function showTooltip(td, e) {
 
 function positionTooltip(td) {
   const tip = getTooltip();
-  const rect = td.getBoundingClientRect();
+  const page = document.querySelector(".page");
+  if (!page) return;
+
+  const tdRect = td.getBoundingClientRect();
+  const pageRect = page.getBoundingClientRect();
   const tipW = tip.offsetWidth;
   const tipH = tip.offsetHeight;
 
+  // 相对于 .page 容器的坐标
+  const tdRight = tdRect.right - pageRect.left;
+  const tdLeft = tdRect.left - pageRect.left;
+  const tdCenterY = tdRect.top - pageRect.top + tdRect.height / 2;
+
   // 默认显示在单元格右侧，垂直居中
-  let left = rect.right + 10;
-  let top = rect.top + rect.height / 2 - tipH / 2;
+  let left = tdRight + 10;
+  let top = tdCenterY - tipH / 2;
 
   // 如果右侧空间不够，显示在左侧
-  if (left + tipW > window.innerWidth - 4) {
-    left = rect.left - tipW - 10;
+  if (tdRect.right + tipW + 10 > window.innerWidth) {
+    left = tdLeft - tipW - 10;
   }
-  // 上下边界保护
-  if (top < 4) top = 4;
-  if (top + tipH > window.innerHeight - 4) top = window.innerHeight - tipH - 4;
+  // 上下边界保护（相对于 page）
+  if (top < 0) top = 0;
+  const pageH = page.scrollHeight;
+  if (top + tipH > pageH) top = pageH - tipH;
 
   tip.style.left = `${left}px`;
   tip.style.top = `${top}px`;
@@ -347,9 +359,7 @@ window.addEventListener("beforeunload", () => {
   if (state.destroyRealtime) state.destroyRealtime();
 });
 
-window.addEventListener("resize", fitToViewport);
-
 bootstrap().then(() => {
-  // 渲染完成后执行自适应缩放
+  // 渲染完成后执行一次自适应缩放，使内容刚好填满视口
   requestAnimationFrame(fitToViewport);
 });

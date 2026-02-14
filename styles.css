@@ -26,13 +26,15 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: "ReejiFlash", Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .page {
   width: fit-content;
   margin: 36px auto 18px;
   padding: 0 16px 20px;
+  position: relative;
 }
 
 .topbar {
@@ -255,7 +257,6 @@ h1 {
 }
 
 .group-highlight {
-  box-shadow: 0 0 0 3px #000000;
   filter: brightness(1.15);
 }
 
@@ -306,14 +307,20 @@ h1 {
   color: var(--muted);
 }
 
-.gap-col {
+.cycle-table .gap-col,
+.cycle-table th.gap-col,
+.cycle-table td.gap-col {
   width: 20px;
   min-width: 20px;
   max-width: 20px;
   padding: 0 !important;
-  border: 0 !important;
+  border: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
   outline: none !important;
-  background: transparent !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+  background: var(--bg) !important;
 }
 
 .cycle-gap-row td {
@@ -448,7 +455,7 @@ h1 {
 /* tooltip */
 .cell-tooltip {
   display: none;
-  position: fixed;
+  position: absolute;
   z-index: 9999;
   background: #1a1a1a;
   color: #f5f5f0;
