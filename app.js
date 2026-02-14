@@ -118,8 +118,10 @@ async function bootstrap() {
 function fitToViewport() {
   const page = document.querySelector(".page");
   if (!page) return;
-  // 先重置缩放以获取真实内容尺寸
+  // 先重置所有缩放相关样式，获取真实内容尺寸
   page.style.transform = "";
+  page.style.marginLeft = "";
+  page.style.marginRight = "";
   page.style.marginBottom = "";
 
   // 同时测量 page 和 table，取最大值以确保完整宽度
@@ -131,15 +133,23 @@ function fitToViewport() {
 
   const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
+  // 获取 CSS 中的 margin-top（36px），高度计算需扣除
+  const marginTop = parseFloat(getComputedStyle(page).marginTop) || 0;
 
-  // 宽度留 ~8% 两侧留白，高度留 20px
+  // 宽度留 ~8% 两侧留白，高度扣除顶部 margin + 底部 16px 留白
   const scaleW = (vw / contentW) * 0.92;
-  const scaleH = (vh - 20) / contentH;
+  const scaleH = (vh - marginTop - 16) / contentH;
   const scale = Math.min(scaleW, scaleH, 1); // 不超过 1
 
   if (scale < 1) {
-    page.style.transformOrigin = "top center";
+    // 从左上角缩放，再通过 marginLeft 手动居中
+    page.style.transformOrigin = "top left";
     page.style.transform = `scale(${scale})`;
+
+    const visualW = contentW * scale;
+    const offsetX = Math.max(0, (vw - visualW) / 2);
+    page.style.marginLeft = `${offsetX}px`;
+    page.style.marginRight = "0px";
     // transform 不影响布局尺寸，用负 margin 补偿多余的空白
     page.style.marginBottom = `${-contentH * (1 - scale)}px`;
   }
