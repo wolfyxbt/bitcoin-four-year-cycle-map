@@ -119,20 +119,29 @@ function fitToViewport() {
   const page = document.querySelector(".page");
   if (!page) return;
   // 先重置缩放以获取真实内容尺寸
-  page.style.zoom = "1";
-  const contentW = page.scrollWidth;
-  const contentH = page.scrollHeight;
-  // 使用 clientWidth 更准确，避免 iOS Safari 的 innerWidth 偏差
+  page.style.transform = "";
+  page.style.marginBottom = "";
+
+  // 同时测量 page 和 table，取最大值以确保完整宽度
+  const table = document.querySelector(".cycle-table");
+  const pagePadX = 32; // page 左右 padding 各 16px
+  const tableW = table ? table.offsetWidth + pagePadX : 0;
+  const contentW = Math.max(page.scrollWidth, page.offsetWidth, tableW);
+  const contentH = Math.max(page.scrollHeight, page.offsetHeight);
+
   const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
 
-  // 宽度方向保留约 4% 留白（两侧各 ~2%），高度方向留 20px
-  const scaleW = (vw / contentW) * 0.96;
+  // 宽度留 ~8% 两侧留白，高度留 20px
+  const scaleW = (vw / contentW) * 0.92;
   const scaleH = (vh - 20) / contentH;
   const scale = Math.min(scaleW, scaleH, 1); // 不超过 1
 
   if (scale < 1) {
-    page.style.zoom = `${scale}`;
+    page.style.transformOrigin = "top center";
+    page.style.transform = `scale(${scale})`;
+    // transform 不影响布局尺寸，用负 margin 补偿多余的空白
+    page.style.marginBottom = `${-contentH * (1 - scale)}px`;
   }
 }
 
@@ -179,25 +188,33 @@ function positionTooltip(td) {
   const page = document.querySelector(".page");
   if (!page) return;
 
+  // 获取当前 transform 缩放比例
+  const m = page.style.transform.match(/scale\(([\d.]+)\)/);
+  const scale = m ? parseFloat(m[1]) : 1;
+
   const tdRect = td.getBoundingClientRect();
   const pageRect = page.getBoundingClientRect();
   const tipW = tip.offsetWidth;
   const tipH = tip.offsetHeight;
 
-  // 相对于 .page 容器的坐标
-  const tdRight = tdRect.right - pageRect.left;
-  const tdLeft = tdRect.left - pageRect.left;
-  const tdCenterY = tdRect.top - pageRect.top + tdRect.height / 2;
+  // getBoundingClientRect 返回的是缩放后的视口坐标
+  // 需要除以 scale 转换为 .page 内部的未缩放坐标
+  const tdRight = (tdRect.right - pageRect.left) / scale;
+  const tdLeft = (tdRect.left - pageRect.left) / scale;
+  const tdTop = (tdRect.top - pageRect.top) / scale;
+  const tdH = tdRect.height / scale;
+  const tdCenterY = tdTop + tdH / 2;
 
   // 默认显示在单元格右侧，垂直居中
   let left = tdRight + 10;
   let top = tdCenterY - tipH / 2;
 
-  // 如果右侧空间不够，显示在左侧
-  if (tdRect.right + tipW + 10 > window.innerWidth) {
+  // 如果右侧空间不够（在未缩放坐标系中判断），显示在左侧
+  const pageW = page.scrollWidth;
+  if (left + tipW > pageW) {
     left = tdLeft - tipW - 10;
   }
-  // 上下边界保护（相对于 page）
+  // 上下边界保护
   if (top < 0) top = 0;
   const pageH = page.scrollHeight;
   if (top + tipH > pageH) top = pageH - tipH;
@@ -345,7 +362,7 @@ function switchLanguage() {
   state.tableRendered = false;
   crossHighlightBound = false;
   rebuildView(true);
-  requestAnimationFrame(fitToViewport);
+  requestAnimationFrame(() => requestAnimationFrame(fitToViewport));
 }
 
 // 事件委托：按钮在表格内，每次重建后 DOM 会变化
@@ -360,6 +377,6 @@ window.addEventListener("beforeunload", () => {
 });
 
 bootstrap().then(() => {
-  // 渲染完成后执行一次自适应缩放，使内容刚好填满视口
-  requestAnimationFrame(fitToViewport);
+  // 双层 rAF：确保 iOS Safari 完成布局后再测量，避免 scrollWidth 不准
+  requestAnimationFrame(() => requestAnimationFrame(fitToViewport));
 });

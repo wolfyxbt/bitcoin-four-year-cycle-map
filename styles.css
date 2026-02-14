@@ -314,9 +314,9 @@ h1 {
   min-width: 20px;
   max-width: 20px;
   padding: 0 !important;
-  border: none !important;
-  border-width: 0 !important;
-  border-style: none !important;
+  /* hidden 在 border-collapse 中优先级最高，强制压制所有相邻边框 */
+  border: hidden !important;
+  border-style: hidden !important;
   outline: none !important;
   outline-width: 0 !important;
   box-shadow: none !important;
