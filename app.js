@@ -120,6 +120,7 @@ function fitToViewport() {
   if (!page) return;
   // 先重置所有缩放相关样式，获取真实内容尺寸
   page.style.transform = "";
+  page.style.marginTop = "";
   page.style.marginLeft = "";
   page.style.marginRight = "";
   page.style.marginBottom = "";
@@ -133,12 +134,15 @@ function fitToViewport() {
 
   const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
-  // 获取 CSS 中的 margin-top（36px），高度计算需扣除
-  const marginTop = parseFloat(getComputedStyle(page).marginTop) || 0;
+  // 获取 CSS 中的上下 margin（36px + 18px = 54px）
+  const cs = getComputedStyle(page);
+  const cssMarginTop = parseFloat(cs.marginTop) || 0;
+  const cssMarginBottom = parseFloat(cs.marginBottom) || 0;
+  const totalMarginV = cssMarginTop + cssMarginBottom;
 
-  // 宽度留 ~8% 两侧留白，高度扣除顶部 margin + 底部 16px 留白
+  // 宽度留 ~8% 两侧留白，高度扣除上下 margin
   const scaleW = (vw / contentW) * 0.92;
-  const scaleH = (vh - marginTop - 16) / contentH;
+  const scaleH = (vh - totalMarginV) / contentH;
   const scale = Math.min(scaleW, scaleH, 1); // 不超过 1
 
   if (scale < 1) {
@@ -146,13 +150,21 @@ function fitToViewport() {
     page.style.transformOrigin = "top left";
     page.style.transform = `scale(${scale})`;
 
+    // 水平居中
     const visualW = contentW * scale;
     const offsetX = Math.max(0, (vw - visualW) / 2);
     page.style.marginLeft = `${offsetX}px`;
     page.style.marginRight = "0px";
-    // transform 不影响布局尺寸，用负 margin 补偿多余的空白
-    page.style.marginBottom = `${-contentH * (1 - scale)}px`;
+
+    // 垂直居中：让 marginTop + contentH(布局) + marginBottom = vh 恰好等于视口高度
+    const visualH = contentH * scale;
+    const remainH = vh - visualH;
+    const topMargin = Math.max(8, remainH / 2);
+    page.style.marginTop = `${topMargin}px`;
+    page.style.marginBottom = `${vh - topMargin - contentH}px`;
   }
+  // scale = 1 时：CSS margin 合计 54px，scaleH >= 1 意味着 contentH <= vh - 54
+  // 总高 = contentH + 54 <= vh，自然无需滚动
 }
 
 // tooltip 元素
@@ -215,14 +227,16 @@ function positionTooltip(td) {
   const tdH = tdRect.height / scale;
   const tdCenterY = tdTop + tdH / 2;
 
+  // 单元格 hover 会 scale(1.35)，间距需要超过放大后的溢出部分
+  const gap = 22;
   // 默认显示在单元格右侧，垂直居中
-  let left = tdRight + 10;
+  let left = tdRight + gap;
   let top = tdCenterY - tipH / 2;
 
   // 如果右侧空间不够（在未缩放坐标系中判断），显示在左侧
   const pageW = page.scrollWidth;
   if (left + tipW > pageW) {
-    left = tdLeft - tipW - 10;
+    left = tdLeft - tipW - gap;
   }
   // 上下边界保护
   if (top < 0) top = 0;
