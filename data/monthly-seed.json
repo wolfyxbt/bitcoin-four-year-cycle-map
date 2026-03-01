@@ -2,7 +2,7 @@
   "version": 1,
   "timezone": "UTC",
   "symbol": "BTCUSDT",
-  "updatedAt": "2026-02-11T21:28:13.498Z",
+  "updatedAt": "2026-03-01T03:22:04.668Z",
   "rows": [
     {
       "monthKey": "2010-08",
@@ -1303,6 +1303,13 @@
       "monthKey": "2026-01",
       "open": 88735,
       "close": 84563.4,
+      "source": "blockchain-info",
+      "isClosed": true
+    },
+    {
+      "monthKey": "2026-02",
+      "open": 78679.78,
+      "close": 67470.73,
       "source": "blockchain-info",
       "isClosed": true
     }
