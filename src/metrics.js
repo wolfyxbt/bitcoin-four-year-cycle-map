@@ -1,4 +1,4 @@
-import { CONFIG, CYCLE_INFO } from "./config.js?v=20260727b";
+import { CONFIG, CYCLE_INFO } from "./config.js?v=20260727c";
 
 function toNumberOrNull(v) {
   const n = Number(v);

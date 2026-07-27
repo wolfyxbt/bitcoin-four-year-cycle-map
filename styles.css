@@ -362,50 +362,11 @@ h1 {
   background: #FCFCF7;
 }
 
-.market-panel {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-}
-
 .price-box {
   padding: 0;
   display: flex;
   align-items: flex-end;
   gap: 20px;
-}
-
-.data-status {
-  min-height: 14px;
-  font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--muted);
-}
-
-.data-status::before {
-  content: "";
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  margin-right: 5px;
-  border-radius: 50%;
-  background: #9ca3af;
-  vertical-align: 1px;
-}
-
-.data-status.is-live::before {
-  background: #22a447;
-}
-
-.data-status.is-snapshot::before {
-  background: #d69e00;
-}
-
-.data-status.is-offline::before {
-  background: #d6293e;
 }
 
 .price-group {
