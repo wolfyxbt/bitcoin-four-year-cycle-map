@@ -1,8 +1,8 @@
-import { CONFIG } from "./src/config.js?v=20260727b";
-import { loadHistoricalMonthlyData, loadCurrentMonthFallbackSnapshot, fetchCurrentMonthKlineSnapshot, connectRealtimeStreams } from "./src/dataService.js?v=20260727b";
-import { buildYearMatrix, computeBottomStats } from "./src/metrics.js?v=20260727b";
-import { renderMainTable, updateTableCells, renderSpotPrice, renderMonthChange, renderDataStatus } from "./src/render.js?v=20260727b";
-import { getLang, setLang, t } from "./src/i18n.js?v=20260727b";
+import { CONFIG } from "./src/config.js?v=20260727c";
+import { loadHistoricalMonthlyData, loadCurrentMonthFallbackSnapshot, fetchCurrentMonthKlineSnapshot, connectRealtimeStreams } from "./src/dataService.js?v=20260727c";
+import { buildYearMatrix, computeBottomStats } from "./src/metrics.js?v=20260727c";
+import { renderMainTable, updateTableCells, renderSpotPrice, renderMonthChange } from "./src/render.js?v=20260727c";
+import { getLang, setLang, t } from "./src/i18n.js?v=20260727c";
 
 const state = {
   rowsByMonth: new Map(),
@@ -10,8 +10,6 @@ const state = {
   destroyRealtime: null,
   renderTimer: null,
   tableRendered: false,
-  lastMarketUpdateAt: null,
-  marketStatus: { state: "connecting", updatedAt: null },
 };
 
 function getNowMonthKeyUTC() {
@@ -23,11 +21,6 @@ function getNowMonthKeyUTC() {
 
 function setRow(row) {
   state.rowsByMonth.set(row.monthKey, row);
-}
-
-function setMarketStatus(status) {
-  state.marketStatus = status;
-  renderDataStatus(status);
 }
 
 function rebuildView(forceFullRender = false) {
@@ -64,10 +57,8 @@ async function bootstrap() {
     for (const row of rows) setRow(row);
     if (fallbackSnapshot) {
       setRow(fallbackSnapshot);
-      state.lastMarketUpdateAt = fallbackSnapshot.fetchedAt;
       renderSpotPrice(fallbackSnapshot.close);
       renderMonthChange(((fallbackSnapshot.close - fallbackSnapshot.open) / fallbackSnapshot.open) * 100);
-      setMarketStatus({ state: "snapshot", updatedAt: fallbackSnapshot.fetchedAt });
     }
 
     // 先用静态数据渲染表格，不阻塞实时行情连接
@@ -78,13 +69,9 @@ async function bootstrap() {
       .then((currentMonth) => {
         if (currentMonth) {
           setRow(currentMonth);
-          state.lastMarketUpdateAt = currentMonth.fetchedAt;
           rebuildView();
           renderSpotPrice(currentMonth.close);
           renderMonthChange(((currentMonth.close - currentMonth.open) / currentMonth.open) * 100);
-          if (state.marketStatus.state !== "live") {
-            setMarketStatus({ state: "snapshot", updatedAt: currentMonth.fetchedAt });
-          }
         }
       })
       .catch((error) => {
@@ -115,8 +102,7 @@ async function bootstrap() {
       .catch(() => {});
 
     state.destroyRealtime = connectRealtimeStreams({
-      onTradePrice: (price, meta) => {
-        state.lastMarketUpdateAt = meta.updatedAt;
+      onTradePrice: (price) => {
         renderSpotPrice(price);
         // 计算本月涨跌幅
         const currentRow = state.rowsByMonth.get(state.nowMonthKey);
@@ -126,7 +112,6 @@ async function bootstrap() {
         }
       },
       onMonthKline: (kline) => {
-        state.lastMarketUpdateAt = kline.updatedAt;
         setRow({
           monthKey: kline.monthKey,
           open: kline.open,
@@ -135,18 +120,6 @@ async function bootstrap() {
           isClosed: kline.isClosed,
         });
         scheduleRender();
-      },
-      onStatus: (status) => {
-        if (status.state === "live") {
-          setMarketStatus({ state: "live", updatedAt: state.lastMarketUpdateAt });
-        } else if (status.state === "offline") {
-          setMarketStatus({
-            state: state.lastMarketUpdateAt ? "offline" : "unavailable",
-            updatedAt: state.lastMarketUpdateAt,
-          });
-        } else if (!state.lastMarketUpdateAt) {
-          setMarketStatus({ state: "connecting", updatedAt: null });
-        }
       },
       onError: (message) => {
         console.warn(message);
@@ -417,7 +390,6 @@ function updateStaticTexts() {
   if (monthLabelEl) monthLabelEl.textContent = t("monthChangeLabel");
   const langText = document.querySelector("#lang-btn .lang-text");
   if (langText) langText.textContent = t("langBtn");
-  renderDataStatus(state.marketStatus);
 }
 
 function switchLanguage() {

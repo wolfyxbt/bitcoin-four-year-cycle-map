@@ -56,7 +56,7 @@ npx serve .
 | 计价 | 2017-08 起为 USDT；更早历史为综合 USD 市价 |
 | 月涨跌幅 | (收盘价 - 开盘价) / 开盘价 × 100% |
 | 历史数据 | 2017-08 起来自 Binance `BTCUSDT` 官方月线归档；更早数据来自 Blockchain.com 未采样日线 |
-| 实时数据 | 当前月优先使用 `data-api/data-stream.binance.vision`，失败后切换至 `binance.me`，全部不可用时显示每日静态快照及更新时间 |
+| 实时数据 | 当前月优先使用 `data-api/data-stream.binance.vision`，失败后切换至 `binance.me`，全部不可用时使用每日静态快照 |
 
 ## 每月自动更新
 
@@ -64,7 +64,7 @@ npx serve .
 
 Binance 通常在下月第一个星期一发布月度归档。归档尚未发布时任务会安全退出，下一天自动重试；下载完成后还会使用官方 `.CHECKSUM` 文件校验数据完整性。
 
-另一个每日任务会从 Binance 官方日线归档生成 `data/current-month.json`。因此即使访客网络无法连接 Binance 实时域名，页面仍可展示截至前一日 UTC 收盘的静态快照，并明确标出数据时间。
+另一个每日任务会从 Binance 官方日线归档生成 `data/current-month.json`。因此即使访客网络无法连接 Binance 实时域名，页面仍可展示截至前一日 UTC 收盘的静态快照。
 
 - 工作流：`.github/workflows/monthly-update.yml`、`.github/workflows/daily-snapshot.yml`
 - 脚本：`scripts/update-monthly-seed.mjs`

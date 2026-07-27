@@ -1,4 +1,4 @@
-import { CONFIG } from "./config.js?v=20260727b";
+import { CONFIG } from "./config.js?v=20260727c";
 
 const REQUEST_TIMEOUT_MS = 8000;
 const REST_ENDPOINTS = [
