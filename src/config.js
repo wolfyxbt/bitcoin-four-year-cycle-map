@@ -3,6 +3,7 @@ export const CONFIG = {
   startYear: 2011,
   endYear: 2030,
   monthlySeedPath: "./data/monthly-seed.json",
+  currentMonthSnapshotPath: "./data/current-month.json",
   monthLabels: ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"],
   cycleAnchorYear: 2024,
   halvingMonths: new Set(["2012-11", "2016-06", "2020-05", "2024-04", "2028-04"]),

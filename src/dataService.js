@@ -1,4 +1,20 @@
-import { CONFIG } from "./config.js";
+import { CONFIG } from "./config.js?v=20260727b";
+
+const REQUEST_TIMEOUT_MS = 8000;
+const REST_ENDPOINTS = [
+  { name: "binance-data", baseUrl: "https://data-api.binance.vision" },
+  { name: "binance-me", baseUrl: "https://api.binance.me" },
+];
+const WS_ENDPOINTS = [
+  {
+    name: "binance-data",
+    url: "wss://data-stream.binance.vision:443/stream?streams=btcusdt@kline_1M/btcusdt@trade",
+  },
+  {
+    name: "binance-me",
+    url: "wss://stream.binance.me:9443/stream?streams=btcusdt@kline_1M/btcusdt@trade",
+  },
+];
 
 function toMonthKeyFromTimestamp(tsMs) {
   const shifted = new Date(tsMs + CONFIG.timezoneOffsetMs);
@@ -27,9 +43,15 @@ function normalizeBinanceKlineRow(row) {
 }
 
 async function fetchJson(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`请求失败: ${res.status} ${url}`);
-  return res.json();
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(`请求失败: ${res.status} ${url}`);
+    return res.json();
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function normalizeSeedRows(input) {
@@ -55,31 +77,68 @@ export async function loadHistoricalMonthlyData() {
   }
 }
 
+export async function loadCurrentMonthFallbackSnapshot() {
+  try {
+    const input = await fetchJson(CONFIG.currentMonthSnapshotPath);
+    const row = input?.row;
+    const open = Number(row?.open);
+    const close = Number(row?.close);
+    const fetchedAt = Date.parse(row?.asOf || input?.updatedAt);
+    if (
+      row?.monthKey !== getNowMonthKey() ||
+      !Number.isFinite(open) ||
+      !Number.isFinite(close) ||
+      !Number.isFinite(fetchedAt)
+    ) {
+      return null;
+    }
+    return {
+      monthKey: row.monthKey,
+      open,
+      close,
+      source: row.source || "static-snapshot",
+      isClosed: false,
+      fetchedAt,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchCurrentMonthKlineSnapshot() {
   const nowMonthKey = getNowMonthKey();
-  const url = "https://api.binance.me/api/v3/klines?symbol=BTCUSDT&interval=1M&timeZone=0&limit=2";
-  const data = await fetchJson(url);
-  const normalized = data.map(normalizeBinanceKlineRow).sort((a, b) => a.monthKey.localeCompare(b.monthKey));
-  return normalized.find((r) => r.monthKey === nowMonthKey) || normalized[normalized.length - 1] || null;
+  const errors = [];
+  for (const endpoint of REST_ENDPOINTS) {
+    try {
+      const url = `${endpoint.baseUrl}/api/v3/klines?symbol=BTCUSDT&interval=1M&timeZone=0&limit=2`;
+      const data = await fetchJson(url);
+      const normalized = data.map(normalizeBinanceKlineRow).sort((a, b) => a.monthKey.localeCompare(b.monthKey));
+      const row = normalized.find((item) => item.monthKey === nowMonthKey);
+      if (!row) throw new Error(`未返回当前月份 ${nowMonthKey}`);
+      return { ...row, endpoint: endpoint.name, fetchedAt: Date.now() };
+    } catch (error) {
+      errors.push(`${endpoint.name}: ${error.message}`);
+    }
+  }
+  throw new Error(`Binance 当前月快照不可用（${errors.join("; ")}）`);
 }
 
 export function connectRealtimeStreams({ onTradePrice, onMonthKline, onStatus = () => {}, onError = () => {} }) {
   let ws = null;
   let reconnectTimer = null;
   let attempts = 0;
+  let endpointIndex = 0;
   let manuallyClosed = false;
 
   const connect = () => {
-    if (ws) {
-      ws.onclose = null;
-      ws.close();
-    }
-    const streams = "btcusdt@kline_1M/btcusdt@trade";
-    ws = new WebSocket(`wss://stream.binance.me:9443/stream?streams=${streams}`);
+    const endpoint = WS_ENDPOINTS[endpointIndex];
+    let connectionFinished = false;
+    onStatus({ state: "connecting", source: endpoint.name });
+    ws = new WebSocket(endpoint.url);
 
     ws.onopen = () => {
       attempts = 0;
-      onStatus("已连接");
+      onStatus({ state: "live", source: endpoint.name });
     };
 
     ws.onmessage = (event) => {
@@ -90,7 +149,7 @@ export function connectRealtimeStreams({ onTradePrice, onMonthKline, onStatus = 
 
         if (stream.includes("@trade")) {
           const price = Number(data.p);
-          if (Number.isFinite(price)) onTradePrice(price);
+          if (Number.isFinite(price)) onTradePrice(price, { source: endpoint.name, updatedAt: Date.now() });
         } else if (stream.includes("@kline_1M")) {
           const k = data.k || {};
           const monthKey = toMonthKeyFromTimestamp(Number(k.t));
@@ -98,7 +157,14 @@ export function connectRealtimeStreams({ onTradePrice, onMonthKline, onStatus = 
           const close = Number(k.c);
           const isClosed = Boolean(k.x);
           if (Number.isFinite(open) && Number.isFinite(close)) {
-            onMonthKline({ monthKey, open, close, isClosed, source: "binance-live" });
+            onMonthKline({
+              monthKey,
+              open,
+              close,
+              isClosed,
+              source: `binance-live:${endpoint.name}`,
+              updatedAt: Date.now(),
+            });
           }
         }
       } catch (error) {
@@ -106,17 +172,28 @@ export function connectRealtimeStreams({ onTradePrice, onMonthKline, onStatus = 
       }
     };
 
-    ws.onerror = () => {
-      onStatus("连接异常，准备重连...");
-    };
+    const handleDisconnect = () => {
+      if (manuallyClosed || connectionFinished) return;
+      connectionFinished = true;
+      ws.onclose = null;
+      ws.onerror = null;
+      if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) ws.close();
 
-    ws.onclose = () => {
-      if (manuallyClosed) return;
-      onStatus("连接断开，重连中...");
+      if (endpointIndex + 1 < WS_ENDPOINTS.length) {
+        endpointIndex += 1;
+        onStatus({ state: "switching", source: WS_ENDPOINTS[endpointIndex].name });
+        reconnectTimer = window.setTimeout(connect, 250);
+        return;
+      }
+
+      endpointIndex = 0;
       attempts += 1;
       const delay = Math.min(30000, 1000 * 2 ** attempts);
+      onStatus({ state: "offline", retryInMs: delay });
       reconnectTimer = window.setTimeout(connect, delay);
     };
+    ws.onerror = handleDisconnect;
+    ws.onclose = handleDisconnect;
   };
 
   connect();

@@ -15,15 +15,18 @@
     <main class="page">
       <header class="topbar">
         <h1 id="main-title">比特币 <span class="muted">四年周期轮动图</span></h1>
-        <div class="price-box">
-          <div class="price-group">
-            <span class="group-label" id="price-label">比特币现价</span>
-            <span id="spot-price" class="price-value">00,000</span>
+        <div class="market-panel">
+          <div class="price-box">
+            <div class="price-group">
+              <span class="group-label" id="price-label">比特币现价</span>
+              <span id="spot-price" class="price-value">00,000</span>
+            </div>
+            <div class="price-group">
+              <span class="group-label" id="month-label">本月</span>
+              <span id="month-change" class="month-change">0.00%</span>
+            </div>
           </div>
-          <div class="price-group">
-            <span class="group-label" id="month-label">本月</span>
-            <span id="month-change" class="month-change">0.00%</span>
-          </div>
+          <div id="data-status" class="data-status is-connecting">正在连接 Binance 行情…</div>
         </div>
       </header>
 
@@ -34,6 +37,6 @@
       </section>
     </main>
 
-    <script type="module" src="./app.js"></script>
+    <script type="module" src="./app.js?v=20260727b"></script>
   </body>
 </html>

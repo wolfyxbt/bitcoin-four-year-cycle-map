@@ -1,4 +1,4 @@
-import { CONFIG, CYCLE_INFO } from "./config.js";
+import { CONFIG, CYCLE_INFO } from "./config.js?v=20260727b";
 
 function toNumberOrNull(v) {
   const n = Number(v);
@@ -90,4 +90,3 @@ export function computeBottomStats(yearRows) {
 
   return { average, median };
 }
-

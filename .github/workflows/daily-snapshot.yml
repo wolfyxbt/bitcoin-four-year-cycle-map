@@ -1,0 +1,36 @@
+name: Daily Market Snapshot
+
+on:
+  schedule:
+    - cron: "20 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Update current-month snapshot
+        run: node scripts/update-monthly-seed.mjs --snapshot
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet -- data/current-month.json; then
+            echo "No snapshot changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/current-month.json
+          git commit -m "chore(data): update daily market snapshot"
+          git push

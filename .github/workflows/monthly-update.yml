@@ -2,7 +2,9 @@ name: Monthly Seed Update
 
 on:
   schedule:
-    - cron: "10 0 1 * *"
+    # Binance monthly archives are normally published on the first Monday.
+    # Try once per day during the first eight days; unpublished archives are a no-op.
+    - cron: "20 6 1-8 * *"
   workflow_dispatch:
     inputs:
       mode:
