@@ -43,28 +43,30 @@ npx serve .
 ## 技术栈
 
 - **纯前端**：HTML / CSS / JavaScript（ES Modules），无框架依赖
-- **实时数据**：Binance WebSocket（逐笔交易 + 月线 K 线）
-- **历史数据**：`data/monthly-seed.json` 静态文件（数据源：blockchain.info）
+- **实时数据**：Binance 公开行情 REST + WebSocket（双域名自动切换，失败时读取每日静态快照）
+- **历史数据**：`data/monthly-seed.json` 静态文件（Binance 官方归档 + 早期 Blockchain.com 数据）
 - **减半预测**：Blockchair 公开 API
-- **自动更新**：GitHub Actions 每月自动固化上月数据（含自动重试机制）
+- **自动更新**：GitHub Actions 每月固化上月数据，并每日生成当前月静态快照
 
 ## 数据说明
 
 | 项目 | 说明 |
 |------|------|
 | 时区 | UTC |
-| 计价 | USDT |
+| 计价 | 2017-08 起为 USDT；更早历史为综合 USD 市价 |
 | 月涨跌幅 | (收盘价 - 开盘价) / 开盘价 × 100% |
-| 历史数据 | 2010-08 起，来自 `monthly-seed.json`（blockchain.info） |
-| 实时数据 | 当前月通过 Binance WebSocket 动态更新 |
+| 历史数据 | 2017-08 起来自 Binance `BTCUSDT` 官方月线归档；更早数据来自 Blockchain.com 未采样日线 |
+| 实时数据 | 当前月优先使用 `data-api/data-stream.binance.vision`，失败后切换至 `binance.me`，全部不可用时显示每日静态快照及更新时间 |
 
 ## 每月自动更新
 
-通过 GitHub Actions，每月 1 日 UTC 00:10 自动从 blockchain.info 获取上月收盘数据，写入 `monthly-seed.json` 并提交。
+通过 GitHub Actions 在每月 1–8 日 UTC 06:20 检查 Binance 官方月线归档，归档发布后把上月数据写入 `monthly-seed.json` 并提交。
 
-如果获取失败（API 暂时不可用或数据尚未就绪），脚本会自动重试，每次间隔 1 小时，最多重试 5 次。
+Binance 通常在下月第一个星期一发布月度归档。归档尚未发布时任务会安全退出，下一天自动重试；下载完成后还会使用官方 `.CHECKSUM` 文件校验数据完整性。
 
-- 工作流：`.github/workflows/monthly-update.yml`
+另一个每日任务会从 Binance 官方日线归档生成 `data/current-month.json`。因此即使访客网络无法连接 Binance 实时域名，页面仍可展示截至前一日 UTC 收盘的静态快照，并明确标出数据时间。
+
+- 工作流：`.github/workflows/monthly-update.yml`、`.github/workflows/daily-snapshot.yml`
 - 脚本：`scripts/update-monthly-seed.mjs`
 
 也可手动触发：进入仓库 Actions 页面 → Monthly Seed Update → Run workflow。
@@ -82,14 +84,16 @@ npx serve .
 │   ├── render.js              # 渲染（表格、滚动数字、按钮）
 │   └── i18n.js                # 中英文翻译
 ├── data/
-│   └── monthly-seed.json      # 历史月度数据
+│   ├── monthly-seed.json      # 历史月度数据
+│   └── current-month.json     # 当前月每日静态快照
 ├── favicon/                   # 网站图标（ico / png / webmanifest）
 ├── fonts/
 │   └── reeji-flash.ttf        # 自定义字体
 ├── scripts/
-│   └── update-monthly-seed.mjs # 月度数据更新脚本（含重试机制）
+│   └── update-monthly-seed.mjs # 月度数据与每日快照更新脚本
 └── .github/workflows/
-    └── monthly-update.yml     # GitHub Actions 工作流
+    ├── daily-snapshot.yml     # 每日静态快照
+    └── monthly-update.yml     # 月度数据更新
 ```
 
 ## License

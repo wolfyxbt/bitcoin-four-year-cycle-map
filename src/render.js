@@ -1,5 +1,5 @@
-import { CONFIG } from "./config.js";
-import { t } from "./i18n.js?v=20260211b";
+import { CONFIG } from "./config.js?v=20260727b";
+import { t } from "./i18n.js?v=20260727b";
 
 function formatPct(v) {
   if (!Number.isFinite(v)) return "";
@@ -277,3 +277,29 @@ export function renderMonthChange(pct) {
   applyRollingText(el, text);
 }
 
+export function renderDataStatus({ state, updatedAt = null }) {
+  const el = document.getElementById("data-status");
+  if (!el) return;
+
+  const timestamp = Number.isFinite(updatedAt) ? new Date(updatedAt).toISOString() : "";
+  const asOf = timestamp
+    ? ` · ${t("dataAsOf")} ${timestamp.slice(0, 10)} ${timestamp.slice(11, 16)} UTC`
+    : "";
+
+  if (state === "live") {
+    el.textContent = t("dataLive");
+    el.className = "data-status is-live";
+  } else if (state === "snapshot") {
+    el.textContent = `${t("dataSnapshot")}${asOf}`;
+    el.className = "data-status is-snapshot";
+  } else if (state === "offline") {
+    el.textContent = `${t("dataOffline")}${asOf}`;
+    el.className = "data-status is-offline";
+  } else if (state === "unavailable") {
+    el.textContent = t("dataUnavailable");
+    el.className = "data-status is-offline";
+  } else {
+    el.textContent = t("dataConnecting");
+    el.className = "data-status is-connecting";
+  }
+}
