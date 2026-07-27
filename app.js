@@ -1,7 +1,7 @@
 import { CONFIG } from "./src/config.js?v=20260727c";
 import { loadHistoricalMonthlyData, loadCurrentMonthFallbackSnapshot, fetchCurrentMonthKlineSnapshot, connectRealtimeStreams } from "./src/dataService.js?v=20260727c";
-import { buildYearMatrix, computeBottomStats } from "./src/metrics.js?v=20260727c";
-import { renderMainTable, updateTableCells, renderSpotPrice, renderMonthChange } from "./src/render.js?v=20260727c";
+import { buildYearMatrix, computeBottomStats } from "./src/metrics.js?v=20260727d";
+import { renderMainTable, updateTableCells, renderSpotPrice, renderMonthChange } from "./src/render.js?v=20260727d";
 import { getLang, setLang, t } from "./src/i18n.js?v=20260727c";
 
 const state = {
@@ -199,8 +199,7 @@ function showTooltip(td, e) {
   const open = td.dataset.open;
   const close = td.dataset.close;
   const pct = td.dataset.pct;
-  const monthKey = td.dataset.month;
-  if (!open || !close || !pct || !monthKey) {
+  if (!open || !close || !pct) {
     hideTooltip();
     return;
   }
@@ -341,6 +340,7 @@ function setupCrossHighlight() {
           highlighted.push(cell);
         }
       }
+      if (colIndex === 14) showTooltip(td, e);
       return;
     }
 

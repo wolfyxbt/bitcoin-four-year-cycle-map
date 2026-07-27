@@ -60,7 +60,9 @@ export function buildYearMatrix(rows) {
   for (const y of years) {
     const first = y.months.find((m) => m && Number.isFinite(m.open));
     const last = [...y.months].reverse().find((m) => m && Number.isFinite(m.close));
-    y.totalPct = first && last && first.open !== 0 ? ((last.close - first.open) / first.open) * 100 : null;
+    y.totalOpen = first?.open ?? null;
+    y.totalClose = last?.close ?? null;
+    y.totalPct = first && last && first.open !== 0 ? ((y.totalClose - y.totalOpen) / y.totalOpen) * 100 : null;
     y.cycle = getCycleInfo(y.year);
   }
 

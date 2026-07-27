@@ -62,6 +62,9 @@ export function renderMainTable({ yearRows, bottomStats, nowMonthKey }) {
   for (let i = 0; i < totalYears; i++) {
     const row = yearRows[i];
     const totalClass = pctColorClass(row.totalPct);
+    const totalDataAttrs = Number.isFinite(row.totalOpen) && Number.isFinite(row.totalClose) && Number.isFinite(row.totalPct)
+      ? ` data-open="${row.totalOpen}" data-close="${row.totalClose}" data-pct="${row.totalPct.toFixed(2)}"`
+      : "";
     // 年份背景渐变：最晚年份（i=0, 顶部）#aacfff → 最早年份（i=N-1, 底部）白色
     const ratio = totalYears > 1 ? 1 - i / (totalYears - 1) : 0;
     const r = Math.round(255 - 85 * ratio);  // 255 → 170
@@ -80,7 +83,7 @@ export function renderMainTable({ yearRows, bottomStats, nowMonthKey }) {
           })
           .join("")}
         <td class="gap-col"></td>
-        <td class="total-cell ${totalClass}">${formatPct(row.totalPct)}</td>
+        <td class="total-cell ${totalClass}"${totalDataAttrs}>${formatPct(row.totalPct)}</td>
         <td class="cycle-cell ${row.cycle.className}">${t(row.cycle.key)}</td>
       </tr>
     `);
@@ -164,6 +167,15 @@ export function updateTableCells({ yearRows, bottomStats, nowMonthKey }) {
       const newText = formatPct(yr.totalPct);
       if (totalTd.textContent !== newText) totalTd.textContent = newText;
       replaceDataClass(totalTd, newClass);
+      if (Number.isFinite(yr.totalOpen) && Number.isFinite(yr.totalClose) && Number.isFinite(yr.totalPct)) {
+        totalTd.dataset.open = yr.totalOpen;
+        totalTd.dataset.close = yr.totalClose;
+        totalTd.dataset.pct = yr.totalPct.toFixed(2);
+      } else {
+        delete totalTd.dataset.open;
+        delete totalTd.dataset.close;
+        delete totalTd.dataset.pct;
+      }
     }
   }
 
