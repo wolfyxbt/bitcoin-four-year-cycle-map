@@ -1,5 +1,5 @@
 import { CONFIG } from "./src/config.js?v=20260727c";
-import { loadHistoricalMonthlyData, loadCurrentMonthFallbackSnapshot, fetchCurrentMonthKlineSnapshot, connectRealtimeStreams } from "./src/dataService.js?v=20260727c";
+import { loadHistoricalMonthlyData, loadCurrentMonthFallbackSnapshot, fetchRecentMonthlyKlines, connectRealtimeStreams } from "./src/dataService.js?v=20261002a";
 import { buildYearMatrix, computeBottomStats } from "./src/metrics.js?v=20260727d";
 import { renderMainTable, updateTableCells, renderSpotPrice, renderMonthChange } from "./src/render.js?v=20260727d";
 import { getLang, setLang, t } from "./src/i18n.js?v=20260727c";
@@ -64,15 +64,27 @@ async function bootstrap() {
     // 先用静态数据渲染表格，不阻塞实时行情连接
     rebuildView();
 
-    // 异步补当前月快照，成功后刷新表格
-    fetchCurrentMonthKlineSnapshot()
-      .then((currentMonth) => {
+    // 异步拉最近几根月线：补当前月快照，同时用已收盘月线临时填充 seed 里还没有的月份
+    // （每月初 Binance 月度归档尚未发布时，上个月在 seed 里是缺失的）
+    fetchRecentMonthlyKlines(3)
+      .then((klines) => {
+        let currentMonth = null;
+        let changed = false;
+        for (const kline of klines) {
+          if (kline.monthKey === state.nowMonthKey) {
+            currentMonth = kline;
+          } else if (kline.isClosed && !state.rowsByMonth.has(kline.monthKey)) {
+            setRow(kline);
+            changed = true;
+          }
+        }
         if (currentMonth) {
           setRow(currentMonth);
-          rebuildView();
+          changed = true;
           renderSpotPrice(currentMonth.close);
           renderMonthChange(((currentMonth.close - currentMonth.open) / currentMonth.open) * 100);
         }
+        if (changed) rebuildView();
       })
       .catch((error) => {
         console.warn(error.message);

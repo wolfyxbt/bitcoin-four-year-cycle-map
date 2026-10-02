@@ -105,22 +105,29 @@ export async function loadCurrentMonthFallbackSnapshot() {
   }
 }
 
-export async function fetchCurrentMonthKlineSnapshot() {
-  const nowMonthKey = getNowMonthKey();
+export async function fetchRecentMonthlyKlines(limit = 3) {
   const errors = [];
   for (const endpoint of REST_ENDPOINTS) {
     try {
-      const url = `${endpoint.baseUrl}/api/v3/klines?symbol=BTCUSDT&interval=1M&timeZone=0&limit=2`;
+      const url = `${endpoint.baseUrl}/api/v3/klines?symbol=BTCUSDT&interval=1M&timeZone=0&limit=${limit}`;
       const data = await fetchJson(url);
       const normalized = data.map(normalizeBinanceKlineRow).sort((a, b) => a.monthKey.localeCompare(b.monthKey));
-      const row = normalized.find((item) => item.monthKey === nowMonthKey);
-      if (!row) throw new Error(`未返回当前月份 ${nowMonthKey}`);
-      return { ...row, endpoint: endpoint.name, fetchedAt: Date.now() };
+      if (normalized.length === 0) throw new Error("未返回月线数据");
+      const fetchedAt = Date.now();
+      return normalized.map((row) => ({ ...row, endpoint: endpoint.name, fetchedAt }));
     } catch (error) {
       errors.push(`${endpoint.name}: ${error.message}`);
     }
   }
-  throw new Error(`Binance 当前月快照不可用（${errors.join("; ")}）`);
+  throw new Error(`Binance 月线快照不可用（${errors.join("; ")}）`);
+}
+
+export async function fetchCurrentMonthKlineSnapshot() {
+  const nowMonthKey = getNowMonthKey();
+  const rows = await fetchRecentMonthlyKlines(2);
+  const row = rows.find((item) => item.monthKey === nowMonthKey);
+  if (!row) throw new Error(`未返回当前月份 ${nowMonthKey}`);
+  return row;
 }
 
 export function connectRealtimeStreams({ onTradePrice, onMonthKline, onStatus = () => {}, onError = () => {} }) {
