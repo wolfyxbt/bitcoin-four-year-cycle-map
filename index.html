@@ -11,8 +11,30 @@
     <link rel="manifest" href="./favicon/site.webmanifest" />
     <link rel="preload" href="./fonts/reeji-flash.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="./styles.css" />
+    <style>
+      /* 迁移提示：固定在视口顶部，不参与 .page 的缩放测量 */
+      .moved-notice {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        display: block;
+        padding: 4px 12px;
+        font-size: 12px;
+        line-height: 16px;
+        text-align: center;
+        text-decoration: none;
+        color: #5a4a00;
+        background: #fff3b0;
+        border-bottom: 1px solid #e6d36a;
+      }
+      .moved-notice:hover { background: #ffe97a; }
+      .moved-notice b { text-decoration: underline; }
+    </style>
   </head>
   <body>
+    <a id="moved-notice" class="moved-notice" href="https://wolfyxbt.github.io/bitcoin-monthly-calendar/">本项目已更名为「比特币月历」，此页面不再维护。<b>点击前往新地址 →</b></a>
     <main class="page">
       <header class="topbar">
         <h1 id="main-title">比特币 <span class="muted">四年周期轮动图</span></h1>
@@ -35,6 +57,6 @@
       </section>
     </main>
 
-    <script type="module" src="./app.js?v=20261003a"></script>
+    <script type="module" src="./app.js?v=20261003b"></script>
   </body>
 </html>

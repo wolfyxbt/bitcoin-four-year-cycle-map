@@ -404,6 +404,13 @@ function updateStaticTexts() {
   if (monthLabelEl) monthLabelEl.textContent = t("monthChangeLabel");
   const langText = document.querySelector("#lang-btn .lang-text");
   if (langText) langText.textContent = t("langBtn");
+  const movedEl = document.getElementById("moved-notice");
+  if (movedEl) {
+    movedEl.innerHTML =
+      getLang() === "en"
+        ? "This project has been renamed to Bitcoin Monthly Calendar and this page is no longer maintained. <b>Go to the new site →</b>"
+        : "本项目已更名为「比特币月历」，此页面不再维护。<b>点击前往新地址 →</b>";
+  }
 }
 
 function switchLanguage() {
