@@ -161,6 +161,8 @@ function fitToViewport() {
 
   const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
+  // 视口尚未就绪（例如页面在后台标签页中加载）时不缩放，等 resize 事件再适配
+  if (vw <= 0 || vh <= 0) return;
   // 获取 CSS 中的上下 margin（36px + 18px = 54px）
   const cs = getComputedStyle(page);
   const cssMarginTop = parseFloat(cs.marginTop) || 0;
@@ -413,7 +415,7 @@ function switchLanguage() {
   state.tableRendered = false;
   crossHighlightBound = false;
   rebuildView(true);
-  requestAnimationFrame(() => requestAnimationFrame(fitToViewport));
+  scheduleFit();
 }
 
 // 事件委托：按钮在表格内，每次重建后 DOM 会变化
@@ -427,7 +429,29 @@ window.addEventListener("beforeunload", () => {
   if (state.destroyRealtime) state.destroyRealtime();
 });
 
-bootstrap().then(() => {
+// 重新适配：合并同一帧内的多次请求
+let fitScheduled = false;
+function scheduleFit() {
+  if (fitScheduled) return;
+  fitScheduled = true;
   // 双层 rAF：确保 iOS Safari 完成布局后再测量，避免 scrollWidth 不准
-  requestAnimationFrame(() => requestAnimationFrame(fitToViewport));
-});
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      fitScheduled = false;
+      fitToViewport();
+    }),
+  );
+}
+
+// 窗口尺寸变化（含移动端横竖屏切换）时重新适配
+window.addEventListener("resize", scheduleFit);
+
+// 自定义字体首次访问时下载较慢：先用备用字体排版，尺寸偏大会导致缩放偏小。
+// 字体加载完成后必须重新测量一次。
+if (document.fonts) {
+  document.fonts.load('16px "ReejiFlash"').then(scheduleFit, () => {});
+  document.fonts.ready.then(scheduleFit, () => {});
+  document.fonts.addEventListener?.("loadingdone", scheduleFit);
+}
+
+bootstrap().then(scheduleFit);
