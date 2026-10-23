@@ -280,16 +280,21 @@ function hideTooltip() {
 }
 
 // 交叉高亮：hover 数据单元格时，同时放大对应的年份和月份表头
-let crossHighlightBound = false;
+let crossHighlightBinding = null;
 function setupCrossHighlight() {
   const table = document.getElementById("cycle-table");
-  if (!table || crossHighlightBound) return;
-  crossHighlightBound = true;
+  if (!table) return;
+
+  if (crossHighlightBinding) {
+    crossHighlightBinding.table.removeEventListener("mouseover", crossHighlightBinding.handleMouseOver);
+    crossHighlightBinding.table.removeEventListener("mouseleave", crossHighlightBinding.handleMouseLeave);
+    crossHighlightBinding.clearHighlight();
+  }
 
   let highlighted = [];
   let currentTd = null;
 
-  table.addEventListener("mouseover", (e) => {
+  function handleMouseOver(e) {
     const td = e.target.closest("td");
     if (!td || td.classList.contains("gap-col") || td.classList.contains("year-cell")) return;
 
@@ -374,12 +379,12 @@ function setupCrossHighlight() {
 
     // 显示 tooltip
     showTooltip(td, e);
-  });
+  }
 
-  table.addEventListener("mouseleave", () => {
+  function handleMouseLeave() {
     clearHighlight();
     hideTooltip();
-  });
+  }
 
   function clearHighlight() {
     for (const el of highlighted) {
@@ -390,6 +395,10 @@ function setupCrossHighlight() {
     currentTd = null;
     hideTooltip();
   }
+
+  table.addEventListener("mouseover", handleMouseOver);
+  table.addEventListener("mouseleave", handleMouseLeave);
+  crossHighlightBinding = { table, handleMouseOver, handleMouseLeave, clearHighlight };
 }
 
 // 语言切换
@@ -420,7 +429,6 @@ function switchLanguage() {
   updateStaticTexts();
   // 强制完整重渲染表格
   state.tableRendered = false;
-  crossHighlightBound = false;
   rebuildView(true);
   scheduleFit();
 }
