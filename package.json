@@ -1,0 +1,8 @@
+{
+  "name": "bitcoin-four-year-cycle-map",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:data": "node scripts/validate-data.mjs"
+  }
+}
