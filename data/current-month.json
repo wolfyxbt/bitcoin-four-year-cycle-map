@@ -2,13 +2,13 @@
   "version": 1,
   "timezone": "UTC",
   "symbol": "BTCUSDT",
-  "updatedAt": "2026-11-10T23:59:59.999Z",
+  "updatedAt": "2026-11-11T23:59:59.999Z",
   "row": {
     "monthKey": "2026-11",
     "open": 77582.02,
-    "close": 73796.06,
+    "close": 74015.19,
     "source": "binance-public-data-daily",
     "isClosed": false,
-    "asOf": "2026-11-10T23:59:59.999Z"
+    "asOf": "2026-11-11T23:59:59.999Z"
   }
 }
