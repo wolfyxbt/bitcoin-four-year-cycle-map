@@ -1,0 +1,51 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: JavaScript syntax validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in app.js src/*.js scripts/*.mjs; do
+            echo "Checking $file"
+            node --check "$file"
+          done
+
+      - name: Repository diff safety
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check
+          git diff --check "origin/${{ github.base_ref }}...HEAD"
+
+      - name: JSON validation
+        run: >-
+          node --input-type=module -e
+          "import { readFileSync } from 'node:fs';
+          for (const file of ['data/monthly-seed.json', 'data/current-month.json']) {
+            JSON.parse(readFileSync(file, 'utf8'));
+            console.log(file + ': valid JSON');
+          }"
+
+      - name: Monthly data integrity and annual Total smoke test
+        run: node scripts/validate-data.mjs
